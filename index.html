@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradient PWA Periodic Table</title>
+    <title>Periodic Table of Elements</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6600">
     <style>
-        /* --- CSS STYLES START (Gradient Theme) --- */
+
         body {
             font-family: sans-serif;
-            /* Subtle radial gradient background for the whole page */
             background: radial-gradient(circle at top left, #FFDAB9, #FFEBCC, #FFFFFF);
             color: #333;
             margin: 0;
@@ -46,16 +45,16 @@
             font-size: 10px;
             padding: 3px;
             position: relative;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
             line-height: 1.1;
             color: #1a1a1a;
-            border: none; /* Removing border for cleaner gradient look */
+            border: none;
         }
 
         .element:hover {
             transform: scale(1.1);
             z-index: 10;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.8); /* Glow effect on hover */
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.8);
             outline: 2px solid #FFEB3B;
         }
 
@@ -79,7 +78,6 @@
             padding-top: 2px;
         }
 
-        /* Category Coloring with Gradients */
         .alkali-metal { background: linear-gradient(135deg, #FF9800, #FFC107); color: #000; }
         .alkaline-earth-metal { background: linear-gradient(135deg, #FFC107, #FFEB3B); color: #000; }
         .transition-metal { background: linear-gradient(135deg, #4CAF50, #8BC34A); color: #FFF; }
@@ -92,7 +90,6 @@
         .actinide { background: linear-gradient(135deg, #673AB7, #9575CD); color: #FFF; }
         .unknown { background: linear-gradient(135deg, #795548, #A1887F); color: #FFF; }
 
-        /* Details Panel */
         .details-panel {
             position: fixed;
             top: 50%;
@@ -114,7 +111,7 @@
         .details-panel h3 {
             margin-top: 15px;
             margin-bottom: 5px;
-            color: #FFEB3B; /* Yellow accent */
+            color: #FFEB3B;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
             padding-bottom: 2px;
         }
@@ -386,4 +383,5 @@
         }
     </script>
 </body>
+
 </html>

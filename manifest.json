@@ -1,0 +1,21 @@
+{
+    "name": "Orange Periodic Table PWA",
+    "short_name": "PTable",
+    "description": "Interactive Periodic Table for offline use with vivid colors.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#FF6600",
+    "theme_color": "#FF6600",
+    "icons": [
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

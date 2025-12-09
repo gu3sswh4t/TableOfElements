@@ -17,7 +17,7 @@
             justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
             position: relative;
         }
 
@@ -163,15 +163,17 @@
             transform: scale(1.15);
         }
         
-               #view-controls {
+        #view-controls {
             position: sticky;
             top: 10px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 50;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap; 
+            justify-content: center;
         }
 
         .toggle-btn {
@@ -212,27 +214,12 @@
             transform: translateY(-2px);
         }
 
-
-        @media (max-width: 768px) {
-            .periodic-table-container {
-                width: 100%;
-                overflow-x: auto; 
-            }
-            
-            .periodic-table {
-
-                grid-template-columns: repeat(18, 60px); 
-                grid-template-rows: repeat(7, 60px) 0.5fr repeat(2, 60px);
-                width: max-content; 
-                min-width: 100%;
-                gap: 2px;
-            }
-            
-
-            #reflow-list .periodic-table {
+            @media (max-width: 768px) {
+            #grid-view { display: none; }
+            #reflow-list { 
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
                 width: 100%;
                 box-sizing: border-box;
                 padding-bottom: 100px;
@@ -242,57 +229,61 @@
                 aspect-ratio: auto;
                 width: 100%;
                 height: auto;
-                padding: 15px 10px;
+                padding: 10px 15px;
                 display: grid;
-                grid-template-columns: 50px 1fr 100px;
+                grid-template-columns: 40px 1fr auto;
                 align-items: center;
                 text-align: left;
                 position: relative;
-                font-size: 16px;
+                font-size: 14px;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
             }
             
             #reflow-list .atomic-number {
                 position: static;
                 order: 1;
-                font-size: 1.5em;
+                font-size: 1em;
                 margin-right: 10px;
             }
 
             #reflow-list .symbol {
                 order: 2;
-                font-size: 2em;
+                font-size: 1.5em;
                 font-weight: 700;
+                text-align: left;
             }
 
             #reflow-list .name {
                 order: 3;
                 text-align: right;
-                font-size: 1em;
+                font-size: 0.8em;
                 font-weight: 500;
                 padding: 0;
             }
         }
         
 
-        .desktop-forced .periodic-table {
+        .desktop-forced #reflow-list {
+            display: none !important;
+        }
+        
+        .desktop-forced #grid-view {
+            display: grid !important;
             grid-template-columns: repeat(18, 45px);
             grid-template-rows: repeat(7, 45px) 0.5fr repeat(2, 45px);
             width: max-content;
             overflow-x: scroll;
             gap: 1px;
+            margin-top: 50px; 
         }
         
         .desktop-forced .element {
             font-size: 7px;
+            aspect-ratio: 1/1;
         }
-
+        
         .desktop-forced .name {
             display: block;
-        }
-
-
-        .desktop-forced #reflow-list {
-            display: none;
         }
     </style>
 </head>
@@ -304,7 +295,7 @@
     </div>
 
     <div class="periodic-table-container">
-        <div id="reflow-list" class="mobile-only-view">
+        <div id="reflow-list">
         </div>
         <div id="grid-view" class="periodic-table">
         </div>
@@ -331,7 +322,7 @@
             <p id="detail-benefit"></p>
         </div>
         
-        <button id="back-button" onclick="HOMECOGONNHS()">↩ Go to Google</button>
+        <button id="back-button" onclick="HOMECOGONNHS()">↩ HOME - COGON NHS</button>
 
     </div>
 
@@ -356,31 +347,31 @@
         }
         
         function toggleView(mode) {
-            const body = document.getElementById('app-body');
             const container = document.querySelector('.periodic-table-container');
             
             if (mode === 'list') {
                 container.classList.remove('desktop-forced');
-                container.classList.add('mobile-list');
                 document.getElementById('grid-view').style.display = 'none';
                 document.getElementById('reflow-list').style.display = 'flex';
-                container.style.overflowX = 'hidden';
             } else if (mode === 'desktop') {
-                container.classList.remove('mobile-list');
                 container.classList.add('desktop-forced');
                 document.getElementById('grid-view').style.display = 'grid';
                 document.getElementById('reflow-list').style.display = 'none';
-                container.style.overflowX = 'auto';
             }
         }
         
-        // Initial setup for mobile devices (default to list view)
         function initializeMobileView() {
+            const container = document.querySelector('.periodic-table-container');
+
             if (window.innerWidth <= 768) {
-                toggleView('list');
+                container.classList.remove('desktop-forced');
+                document.getElementById('grid-view').style.display = 'none';
+                document.getElementById('reflow-list').style.display = 'flex';
             } else {
-                 document.getElementById('reflow-list').style.display = 'none';
-                 document.getElementById('grid-view').style.display = 'grid';
+
+                container.classList.remove('desktop-forced');
+                document.getElementById('grid-view').style.display = 'grid';
+                document.getElementById('reflow-list').style.display = 'none';
             }
         }
 
@@ -536,7 +527,6 @@
 
         function generateTable() {
             ELEMENT_DATA.forEach(element => {
-                // Generate Grid Element
                 const gridDiv = document.createElement('div');
                 gridDiv.classList.add('element', element.category);
                 
@@ -556,7 +546,6 @@
                 gridDiv.addEventListener('click', () => showDetails(element, gridDiv));
                 periodicTable.appendChild(gridDiv);
                 
-                // Generate List Element
                 const listDiv = document.createElement('div');
                 listDiv.classList.add('element', element.category);
                 listDiv.innerHTML = generateElementHTML(element, true);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>COGON NHS Periodic Table</title>
+    <title>Dynamic PWA Periodic Table</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6600">
     <style>
@@ -49,6 +49,7 @@
             max-width: 1400px;
             width: 100%;
             z-index: 10;
+            overflow-x: auto; 
         }
 
         .periodic-table {
@@ -57,6 +58,8 @@
             grid-template-rows: repeat(7, 1fr) 0.5fr repeat(2, 1fr);
             gap: 3px;
             padding-bottom: 20px;
+            width: 100%;
+            min-width: 1200px; 
         }
 
         .element {
@@ -166,8 +169,6 @@
         #view-controls {
             position: sticky;
             top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
             z-index: 50;
             margin-bottom: 15px;
             display: flex;
@@ -176,7 +177,7 @@
             justify-content: center;
         }
 
-        .toggle-btn {
+        .control-btn {
             background: linear-gradient(45deg, #3498DB, #2980B9);
             color: white;
             padding: 8px 15px;
@@ -188,115 +189,35 @@
             transition: background 0.2s;
         }
 
-        .toggle-btn:hover {
+        .control-btn:hover {
             background: linear-gradient(45deg, #2980B9, #3498DB);
         }
 
-        #back-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #E74C3C, #C0392B);
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            transition: background 0.3s, transform 0.2s;
-            z-index: 100;
-        }
-        
-        #back-button:hover {
-            background: linear-gradient(45deg, #C0392B, #E74C3C);
-            transform: translateY(-2px);
-        }
-
-            @media (max-width: 768px) {
-            #grid-view { display: none; }
-            #reflow-list { 
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                width: 100%;
-                box-sizing: border-box;
-                padding-bottom: 100px;
+               @media (max-width: 768px) {
+            .periodic-table {
+                grid-template-columns: repeat(18, 40px); 
+                grid-template-rows: repeat(7, 40px) 0.5fr repeat(2, 40px);
+                min-width: 720px; 
+                width: max-content;
+                gap: 1px;
             }
-
-            #reflow-list .element {
-                aspect-ratio: auto;
-                width: 100%;
-                height: auto;
-                padding: 10px 15px;
-                display: grid;
-                grid-template-columns: 40px 1fr auto;
-                align-items: center;
-                text-align: left;
-                position: relative;
-                font-size: 14px;
-                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            .element {
+                font-size: 7px;
             }
-            
-            #reflow-list .atomic-number {
-                position: static;
-                order: 1;
-                font-size: 1em;
-                margin-right: 10px;
+            .name {
+                display: none;
             }
-
-            #reflow-list .symbol {
-                order: 2;
-                font-size: 1.5em;
-                font-weight: 700;
-                text-align: left;
-            }
-
-            #reflow-list .name {
-                order: 3;
-                text-align: right;
-                font-size: 0.8em;
-                font-weight: 500;
-                padding: 0;
-            }
-        }
-        
-
-        .desktop-forced #reflow-list {
-            display: none !important;
-        }
-        
-        .desktop-forced #grid-view {
-            display: grid !important;
-            grid-template-columns: repeat(18, 45px);
-            grid-template-rows: repeat(7, 45px) 0.5fr repeat(2, 45px);
-            width: max-content;
-            overflow-x: scroll;
-            gap: 1px;
-            margin-top: 50px; 
-        }
-        
-        .desktop-forced .element {
-            font-size: 7px;
-            aspect-ratio: 1/1;
-        }
-        
-        .desktop-forced .name {
-            display: block;
         }
     </style>
 </head>
 <body id="app-body">
     <div id="view-controls">
-        <button class="toggle-btn" onclick="toggleView('list')">Reflow List View</button>
-        <button class="toggle-btn" onclick="toggleView('desktop')">Desktop Grid</button>
-        <button class="toggle-btn" onclick="toggleFullScreen()">Full Screen View</button>
+        <button class="control-btn" onclick="toggleView('desktop')">Desktop Grid</button>
+        <button class="control-btn" onclick="toggleFullScreen()">Full Screen View</button>
+        <button class="control-btn" onclick="HOMECOGONNHS()">↩ HOME</button>
     </div>
 
     <div class="periodic-table-container">
-        <div id="reflow-list">
-        </div>
         <div id="grid-view" class="periodic-table">
         </div>
 
@@ -321,9 +242,6 @@
             <h3>Key Benefits</h3>
             <p id="detail-benefit"></p>
         </div>
-        
-        <button id="back-button" onclick="HOMECOGONNHS()">↩ HOME - COGON NHS</button>
-
     </div>
 
     <script>
@@ -340,38 +258,21 @@
                 else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
-                else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                else if (document.msExitFullscreen) document.msExitFullscreen();
+                else if (document.mozCancelFullScreen) doc.mozCancelFullScreen();
+                else if (document.webkitExitFullscreen) doc.webkitExitFullscreen();
+                else if (document.msExitFullscreen) doc.msExitFullscreen();
             }
         }
         
         function toggleView(mode) {
             const container = document.querySelector('.periodic-table-container');
+            const gridView = document.getElementById('grid-view');
             
-            if (mode === 'list') {
-                container.classList.remove('desktop-forced');
-                document.getElementById('grid-view').style.display = 'none';
-                document.getElementById('reflow-list').style.display = 'flex';
-            } else if (mode === 'desktop') {
-                container.classList.add('desktop-forced');
-                document.getElementById('grid-view').style.display = 'grid';
-                document.getElementById('reflow-list').style.display = 'none';
-            }
-        }
-        
-        function initializeMobileView() {
-            const container = document.querySelector('.periodic-table-container');
-
-            if (window.innerWidth <= 768) {
-                container.classList.remove('desktop-forced');
-                document.getElementById('grid-view').style.display = 'none';
-                document.getElementById('reflow-list').style.display = 'flex';
-            } else {
-
-                container.classList.remove('desktop-forced');
-                document.getElementById('grid-view').style.display = 'grid';
-                document.getElementById('reflow-list').style.display = 'none';
+            if (mode === 'desktop') {
+                container.style.width = '100%'; 
+                container.style.overflowX = 'auto'; 
+                gridView.style.minWidth = '1200px'; 
+                gridView.style.gridTemplateColumns = 'repeat(18, 1fr)'; 
             }
         }
 
@@ -426,7 +327,7 @@
             { number: 44, symbol: "Ru", name: "Ruthenium", mass: "101.07", category: "transition-metal", block: "d", row: 5, col: 8, use_case: "Electrical contacts and electrodes (long-wearing); specialized alloys in jewelry; catalyst in chemical synthesis.", danger: "Ruthenium Tetroxide is highly volatile and toxic; ingestion can cause kidney damage.", tandem: "Rhodium (Rh) and Palladium (Pd) - often alloyed together for high-performance electrical components.", benefit: "Extremely effective hardening agent for platinum and palladium; crucial for high-density magnetic recording." },
             { number: 45, symbol: "Rh", name: "Rhodium", mass: "102.91", category: "transition-metal", block: "d", row: 5, col: 9, use_case: "Automotive catalytic converters (reduces nitrogen oxides); mirror coatings (high reflectivity); thermocouple wires.", danger: "Rhodium compounds can stain skin; generally low toxicity but some compounds are carcinogenic.", tandem: "Platinum (Pt) and Palladium (Pd) - used together in three-way catalytic converters.", benefit: "The most expensive precious metal; exceptional resistance to corrosion and high reflectivity." },
             { number: 46, symbol: "Pd", name: "Palladium", mass: "106.42", category: "transition-metal", block: "d", row: 5, col: 10, use_case: "Automotive catalytic converters; jewelry ('white gold'); hydrogen purification; dentistry.", danger: "Generally low toxicity, but can cause allergic reactions in dental or jewelry use.", tandem: "Platinum (Pt) - often substituted for Platinum due to its similar chemical behavior and lower cost.", benefit: "Unique ability to absorb large volumes of hydrogen gas, used for filtration and purification." },
-            { number: 47, symbol: "Ag", name: "Silver", mass: "107.87", category: "transition-metal", block: "d", row: 5, col: 11, use_case: "Photography; high-conductivity electrical contacts; mirrors; antibacterial agent in medical applications.", danger: "Chronic high exposure can cause Argyria (skin turning permanent blue-gray).", tandem: "Copper (Cu) - often alloyed to increase hardness in jewelry and coinage.", benefit: "Highest electrical and thermal conductivity of all metals; naturally antimicrobial properties." },
+            { number: 47, symbol: "Ag", name: "Silver", mass: "107.87", category: "transition-metal", block: "d", row: 5, col: 11, use_case: "Photography; high-conductivity electrical contacts; mirrors; antibacterial agent in medical applications.", danger: "Chronic high exposure can cause Argyria (skin turning permanent blue-gray).", tandem: "Copper (Cu) or Silver (Ag) - alloyed to increase hardness for jewelry.", benefit: "Highest electrical and thermal conductivity of all metals; naturally antimicrobial properties." },
             { number: 48, symbol: "Cd", name: "Cadmium", mass: "112.41", category: "transition-metal", block: "d", row: 5, col: 12, use_case: "NiCd batteries; pigment in plastics; thin film solar cells; galvanizing.", danger: "Highly toxic heavy metal; ingestion or inhalation causes severe kidney and bone damage (Itai-Itai disease).", tandem: "Tellurium (Te) - forms Cadmium Telluride, a highly efficient thin-film solar cell material.", benefit: "Used in control rods in nuclear reactors due to its high neutron absorption capability." },
             { number: 49, symbol: "In", name: "Indium", mass: "114.82", category: "post-transition-metal", block: "p", row: 5, col: 13, use_case: "Touchscreens and LCDs (Indium Tin Oxide, ITO); low-melting alloys; light-emitting diodes.", danger: "Industrial exposure to Indium compounds can lead to pulmonary fibrosis.", tandem: "Tin (Sn) - forms Indium Tin Oxide (ITO), essential transparent conductor.", benefit: "Key component in transparent conductive coatings for nearly all modern flat-panel displays." },
             { number: 50, symbol: "Sn", name: "Tin", mass: "118.71", category: "post-transition-metal", block: "p", row: 5, col: 14, use_case: "Tin cans (coating steel); solder (with Lead or Silver); bronze (with Copper); windows (float glass production).", danger: "Certain organotin compounds can be highly toxic; generally low toxicity in metallic form.", tandem: "Lead (Pb) - used historically in common solder; Copper (Cu) - forms bronze.", benefit: "Excellent corrosion resistance and low melting point, making it ideal for sealing and joining metals." },
@@ -505,24 +406,15 @@
         ];
 
         const periodicTable = document.getElementById('grid-view');
-        const reflowList = document.getElementById('reflow-list');
         const detailsPanel = document.getElementById('details-panel');
         const closeBtn = document.getElementById('close-btn');
 
-        function generateElementHTML(element, isList) {
-            if (isList) {
-                return `
-                    <div class="atomic-number">${element.number}</div>
-                    <div class="symbol">${element.symbol}</div>
-                    <div class="name">${element.name}</div>
-                `;
-            } else {
-                 return `
-                    <div class="atomic-number">${element.number}</div>
-                    <div class="symbol">${element.symbol}</div>
-                    <div class="name">${element.name}</div>
-                `;
-            }
+        function generateElementHTML(element) {
+            return `
+                <div class="atomic-number">${element.number}</div>
+                <div class="symbol">${element.symbol}</div>
+                <div class="name">${element.name}</div>
+            `;
         }
 
         function generateTable() {
@@ -542,15 +434,9 @@
                 } 
                 
                 gridDiv.style.gridArea = `${gridRow} / ${gridCol} / ${gridRow + 1} / ${gridCol + 1}`;
-                gridDiv.innerHTML = generateElementHTML(element, false);
+                gridDiv.innerHTML = generateElementHTML(element);
                 gridDiv.addEventListener('click', () => showDetails(element, gridDiv));
                 periodicTable.appendChild(gridDiv);
-                
-                const listDiv = document.createElement('div');
-                listDiv.classList.add('element', element.category);
-                listDiv.innerHTML = generateElementHTML(element, true);
-                listDiv.addEventListener('click', () => showDetails(element, listDiv));
-                reflowList.appendChild(listDiv);
             });
         }
 
@@ -579,9 +465,6 @@
         });
 
         generateTable();
-        
-        document.addEventListener('DOMContentLoaded', initializeMobileView);
-        window.addEventListener('resize', initializeMobileView);
         
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {

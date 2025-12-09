@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Periodic Table of Elements</title>
+    <title>Complementary Gradient PWA Periodic Table</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6600">
     <style>
 
         body {
             font-family: sans-serif;
-            background: radial-gradient(circle at top left, #FFDAB9, #FFEBCC, #FFFFFF);
+
+            background: linear-gradient(135deg, #FFEFD5, #FFF5EE, #FFF); 
             color: #333;
             margin: 0;
             display: flex;
@@ -48,13 +49,14 @@
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
             line-height: 1.1;
             color: #1a1a1a;
-            border: none;
+            border: none; 
         }
 
         .element:hover {
             transform: scale(1.1);
             z-index: 10;
-            box-shadow: 0 0 20px rgba(255, 102, 0, 0.8);
+            
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.8); 
             outline: 2px solid #FFEB3B;
         }
 
@@ -77,25 +79,33 @@
             text-align: center;
             padding-top: 2px;
         }
+        
 
-        .alkali-metal { background: linear-gradient(135deg, #FF9800, #FFC107); color: #000; }
-        .alkaline-earth-metal { background: linear-gradient(135deg, #FFC107, #FFEB3B); color: #000; }
-        .transition-metal { background: linear-gradient(135deg, #4CAF50, #8BC34A); color: #FFF; }
-        .post-transition-metal { background: linear-gradient(135deg, #03A9F4, #00BCD4); color: #FFF; }
-        .metalloid { background: linear-gradient(135deg, #E91E63, #FF4081); color: #FFF; }
-        .nonmetal { background: linear-gradient(135deg, #9C27B0, #673AB7); color: #FFF; }
-        .halogen { background: linear-gradient(135deg, #00BCD4, #4DD0E1); color: #000; }
-        .noble-gas { background: linear-gradient(135deg, #3F51B5, #5C6BC0); color: #FFF; }
-        .lanthanide { background: linear-gradient(135deg, #FF4081, #F06292); color: #FFF; }
-        .actinide { background: linear-gradient(135deg, #673AB7, #9575CD); color: #FFF; }
-        .unknown { background: linear-gradient(135deg, #795548, #A1887F); color: #FFF; }
+        .alkali-metal { background: linear-gradient(135deg, #FF8C00, #FFA500); color: #000; }
+        .alkaline-earth-metal { background: linear-gradient(135deg, #FFB900, #FFD700); color: #000; }
+        
+        .transition-metal { background: linear-gradient(135deg, #4682B4, #5F9EA0); color: #FFF; }
+        .post-transition-metal { background: linear-gradient(135deg, #5DADE2, #85C1E9); color: #FFF; }
+        .noble-gas { background: linear-gradient(135deg, #34495E, #5D6D7E); color: #FFF; }
+        
+        .metalloid { background: linear-gradient(135deg, #2ECC71, #58D68D); color: #FFF; }
+        
+        .nonmetal { background: linear-gradient(135deg, #E74C3C, #F1948A); color: #FFF; }
+        .halogen { background: linear-gradient(135deg, #8E44AD, #A569BD); color: #FFF; }
+
+
+        .lanthanide { background: linear-gradient(135deg, #FF69B4, #FFC0CB); color: #FFF; }
+        .actinide { background: linear-gradient(135deg, #9932CC, #BA55D3); color: #FFF; }
+        .unknown { background: linear-gradient(135deg, #A9A9A9, #CCCCCC); color: #333; }
+
 
         .details-panel {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(160deg, #FF6600, #E65100); /* Strong, defined panel gradient */
+
+            background: linear-gradient(160deg, #FF6600, #CC5500); 
             border: 3px solid #333;
             color: #FFF;
             border-radius: 10px;
@@ -133,10 +143,10 @@
         }
 
         .element.active {
-            outline: 4px solid #FFEB3B; /* Yellow active border */
+            outline: 4px solid #FFEB3B;
             transform: scale(1.15);
         }
-        /* --- CSS STYLES END --- */
+
     </style>
 </head>
 <body>
@@ -171,7 +181,7 @@
     </div>
 
     <script>
-       
+        
         const ELEMENT_DATA = [
             // Period 1
             { number: 1, symbol: "H", name: "Hydrogen", mass: "1.008", category: "nonmetal", block: "s", row: 1, col: 1, use_case: "Rocket fuel; ammonia (fertilizer) production; oil refining.", danger: "Extremely flammable and highly explosive gas when mixed with air (Hindenburg effect).", tandem: "Oxygen (O) - forms water (H₂O) for fuel cells.", benefit: "Clean energy source; essential component of organic life." },
@@ -304,7 +314,7 @@
             { number: 97, symbol: "Bk", name: "Berkelium", mass: "(247)", category: "actinide", block: "f", row: 10, col: 11, use_case: "Research element; target material for the synthesis of heavier elements.", danger: "Highly radioactive and toxic; extremely short supply.", tandem: "Californium (Cf) - produced via neutron irradiation, often alongside Californium.", benefit: "Used to study the chemistry of the heaviest elements." },
             { number: 98, symbol: "Cf", name: "Californium", mass: "(251)", category: "actinide", block: "f", row: 10, col: 12, use_case: "Neutron source for oil well logging; cancer treatment (Californium-252).", danger: "Highly radioactive and toxic; very strong neutron emitter, requiring careful handling.", tandem: "Curium (Cm) - produced by high-flux neutron irradiation of Curium targets.", benefit: "Californium-252 is one of the most intense neutron sources available, used in medical and industrial applications." },
             { number: 99, symbol: "Es", name: "Einsteinium", mass: "(252)", category: "actinide", block: "f", row: 10, col: 13, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Fermium (Fm) - the two elements were co-discovered in the debris of the first hydrogen bomb test.", benefit: "Helps validate theories of nuclear structure and behavior." },
-            { number: 100, symbol: "Fm", name: "Fermium", mass: "(257)", category: "actinide", block: "f", row: 10, col: 14, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Einsteinium (Es) - named after physicist Enrico Fermi.", benefit: "Its study is limited to specialized national laboratories." },
+            { number: 100, symbol: "Fm", mass: "(257)", category: "actinide", block: "f", row: 10, col: 14, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Einsteinium (Es) - named after physicist Enrico Fermi.", benefit: "Its study is limited to specialized national laboratories." },
             { number: 101, symbol: "Md", name: "Mendelevium", mass: "(258)", category: "actinide", block: "f", row: 10, col: 15, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Einsteinium (Es) - synthesized by bombarding Einsteinium with alpha particles.", benefit: "Named after Dmitri Mendeleev, the father of the periodic table." },
             { number: 102, symbol: "No", name: "Nobelium", mass: "(259)", category: "actinide", block: "f", row: 10, col: 16, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Curium (Cm) - synthesized by bombarding Curium with Carbon ions.", benefit: "Used in studies of the transition between the actinide and transactinide series." },
             { number: 103, symbol: "Lr", name: "Lawrencium", mass: "(262)", category: "actinide", block: "f", row: 10, col: 17, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Californium (Cf) - synthesized by bombarding Californium with Boron ions.", benefit: "The last element of the actinide series; its chemistry is key to understanding superheavy elements." },
@@ -383,5 +393,4 @@
         }
     </script>
 </body>
-
 </html>

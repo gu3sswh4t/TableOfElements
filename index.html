@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dynamic PWA Periodic Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>COGON NHS Periodic Table</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6600">
     <style>
@@ -14,12 +14,10 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
-            overflow-y: auto;
             position: relative;
         }
 
@@ -164,12 +162,39 @@
             outline: 4px solid #FFEB3B; 
             transform: scale(1.15);
         }
+        
+               #view-controls {
+            position: sticky;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(45deg, #3498DB, #2980B9);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: background 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: linear-gradient(45deg, #2980B9, #3498DB);
+        }
 
         #back-button {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(45deg, #3498DB, #2980B9);
+            background: linear-gradient(45deg, #E74C3C, #C0392B);
             color: white;
             padding: 12px 20px;
             border: none;
@@ -183,94 +208,105 @@
         }
         
         #back-button:hover {
-            background: linear-gradient(45deg, #2980B9, #3498DB);
+            background: linear-gradient(45deg, #C0392B, #E74C3C);
             transform: translateY(-2px);
         }
 
-        
-        @media (max-width: 1200px) {
-            .element {
-                font-size: 8px;
-            }
-        }
-        
+
         @media (max-width: 768px) {
-             .periodic-table-container {
-                padding-top: 5vh; 
-            }
-            .element {
-                font-size: 7px;
-                gap: 1px;
-            }
-            .symbol {
-                font-size: 1.5em;
-            }
-            .name {
-                display: none;
-            }
-        }
-        
-
-        @media (orientation: landscape) and (max-height: 600px) {
-            body {
-                padding: 0;
-                margin: 0;
-                overflow: hidden;
-                align-items: flex-start;
-                justify-content: flex-start;
-            }
-
             .periodic-table-container {
-                max-width: none;
-                width: 100vh;
-                height: 100vw;
-                padding: 0;
-                margin: 0;
-                transform-origin: top left;
-                transform: scale(calc(100vw / 100vh));
+                width: 100%;
+                overflow-x: auto; 
             }
             
             .periodic-table {
-                grid-template-columns: repeat(18, calc(100vw / 100vh / 18));
-                gap: 0.5vh; 
-                width: 100vh;
-                height: 100vw;
-                padding-top: 1vh;
-            }
 
-            .element {
-                font-size: 1.5vw;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            }
-
-            .atomic-number {
-                font-size: 0.4em; 
-            }
-
-            .symbol {
-                font-size: 1.4em; 
-            }
-
-            .name {
-                font-size: 0.3em; 
-                padding-top: 2px;
-                display: block; 
+                grid-template-columns: repeat(18, 60px); 
+                grid-template-rows: repeat(7, 60px) 0.5fr repeat(2, 60px);
+                width: max-content; 
+                min-width: 100%;
+                gap: 2px;
             }
             
-            #back-button {
-                bottom: 5px;
-                right: 5px;
-                padding: 8px 15px;
-                font-size: 12px;
+
+            #reflow-list .periodic-table {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                box-sizing: border-box;
+                padding-bottom: 100px;
             }
+
+            #reflow-list .element {
+                aspect-ratio: auto;
+                width: 100%;
+                height: auto;
+                padding: 15px 10px;
+                display: grid;
+                grid-template-columns: 50px 1fr 100px;
+                align-items: center;
+                text-align: left;
+                position: relative;
+                font-size: 16px;
+            }
+            
+            #reflow-list .atomic-number {
+                position: static;
+                order: 1;
+                font-size: 1.5em;
+                margin-right: 10px;
+            }
+
+            #reflow-list .symbol {
+                order: 2;
+                font-size: 2em;
+                font-weight: 700;
+            }
+
+            #reflow-list .name {
+                order: 3;
+                text-align: right;
+                font-size: 1em;
+                font-weight: 500;
+                padding: 0;
+            }
+        }
+        
+
+        .desktop-forced .periodic-table {
+            grid-template-columns: repeat(18, 45px);
+            grid-template-rows: repeat(7, 45px) 0.5fr repeat(2, 45px);
+            width: max-content;
+            overflow-x: scroll;
+            gap: 1px;
+        }
+        
+        .desktop-forced .element {
+            font-size: 7px;
+        }
+
+        .desktop-forced .name {
+            display: block;
+        }
+
+
+        .desktop-forced #reflow-list {
+            display: none;
         }
     </style>
 </head>
-<body>
+<body id="app-body">
+    <div id="view-controls">
+        <button class="toggle-btn" onclick="toggleView('list')">Reflow List View</button>
+        <button class="toggle-btn" onclick="toggleView('desktop')">Desktop Grid</button>
+        <button class="toggle-btn" onclick="toggleFullScreen()">Full Screen View</button>
+    </div>
 
     <div class="periodic-table-container">
-
-        <div id="periodic-table" class="periodic-table">
+        <div id="reflow-list" class="mobile-only-view">
+        </div>
+        <div id="grid-view" class="periodic-table">
         </div>
 
         <div id="details-panel" class="details-panel hidden">
@@ -295,7 +331,7 @@
             <p id="detail-benefit"></p>
         </div>
         
-        <button id="back-button" onclick="HOMECOGONNHS()">↩ HOME - COGON NHS</button>
+        <button id="back-button" onclick="HOMECOGONNHS()">↩ Go to Google</button>
 
     </div>
 
@@ -304,6 +340,50 @@
             window.location.href = 'https://www.cogonnationalhighschool.com';
         }
         
+        function toggleFullScreen() {
+            const doc = document.documentElement;
+            if (!document.fullscreenElement) {
+                if (doc.requestFullscreen) doc.requestFullscreen();
+                else if (doc.mozRequestFullScreen) doc.mozRequestFullScreen();
+                else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+                else if (doc.msRequestFullscreen) doc.msRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                else if (document.msExitFullscreen) document.msExitFullscreen();
+            }
+        }
+        
+        function toggleView(mode) {
+            const body = document.getElementById('app-body');
+            const container = document.querySelector('.periodic-table-container');
+            
+            if (mode === 'list') {
+                container.classList.remove('desktop-forced');
+                container.classList.add('mobile-list');
+                document.getElementById('grid-view').style.display = 'none';
+                document.getElementById('reflow-list').style.display = 'flex';
+                container.style.overflowX = 'hidden';
+            } else if (mode === 'desktop') {
+                container.classList.remove('mobile-list');
+                container.classList.add('desktop-forced');
+                document.getElementById('grid-view').style.display = 'grid';
+                document.getElementById('reflow-list').style.display = 'none';
+                container.style.overflowX = 'auto';
+            }
+        }
+        
+        // Initial setup for mobile devices (default to list view)
+        function initializeMobileView() {
+            if (window.innerWidth <= 768) {
+                toggleView('list');
+            } else {
+                 document.getElementById('reflow-list').style.display = 'none';
+                 document.getElementById('grid-view').style.display = 'grid';
+            }
+        }
+
         const ELEMENT_DATA = [
             { number: 1, symbol: "H", name: "Hydrogen", mass: "1.008", category: "nonmetal", block: "s", row: 1, col: 1, use_case: "Rocket fuel; ammonia (fertilizer) production; oil refining.", danger: "Extremely flammable and highly explosive gas when mixed with air (Hindenburg effect).", tandem: "Oxygen (O) - forms water (H₂O) for fuel cells.", benefit: "Clean energy source; essential component of organic life." },
             { number: 2, symbol: "He", name: "Helium", mass: "4.003", category: "noble-gas", block: "p", row: 1, col: 18, use_case: "Cooling superconducting magnets (MRI); deep-sea diving gas mixtures.", danger: "Inhalation displaces oxygen, leading to asphyxiation risk.", tandem: "Niobium-Titanium (NbTi) - necessary to cool the superconducting wires.", benefit: "Lowest boiling point, essential for cryogenics and medical imaging." },
@@ -318,7 +398,7 @@
             { number: 10, symbol: "Ne", name: "Neon", mass: "20.180", category: "noble-gas", block: "p", row: 2, col: 18, use_case: "Bright advertising signs (neon lighting); high-voltage indicators; gas lasers.", danger: "Asphyxiant in high concentrations; poses a flash freezing hazard in liquid form.", tandem: "Argon (Ar) - often used together in low-pressure discharge tubes to achieve different colors.", benefit: "Produces a distinct, bright orange-red glow when electrified, widely used for visual display." },
             
             { number: 11, symbol: "Na", name: "Sodium", mass: "22.990", category: "alkali-metal", block: "s", row: 3, col: 1, use_case: "Table salt (NaCl); street lights (sodium vapor lamps); nuclear reactor coolant.", danger: "Extremely reactive metal; reacts violently with water, producing flammable hydrogen gas.", tandem: "Chlorine (Cl) - forms Sodium Chloride (NaCl), essential for nerve and muscle function.", benefit: "Crucial electrolyte for fluid balance and electrical signaling in living organisms." },
-            { number: 12, symbol: "Mg", name: "Magnesium", mass: "24.305", category: "alkaline-earth-metal", block: "s", row: 3, col: 2, use_case: "Lightweight alloys (aircraft, car parts); flash photography; antacids.", danger: "Metal powder or ribbon is highly flammable and burns with an intense white light.", tandem: "Aluminum (Al) - forms structural alloys that combine strength and low weight.", benefit: "Essential mineral for human bone health, muscle contraction, and energy production (ATP)." },
+            { number: 12, symbol: "Mg", name: "Magnesium", mass: "24.305", category: "alkaline-earth-metal", block: "s", row: 3, col: 2, use_case: "Lightweight alloys (aircraft, car parts); flash photography; antacids.", danger: "Metal powder or ribbon is highly flammable and burns with an intense white light.", tandem: "Aluminum (Al) - forms structural alloys that combine strength and low weight.", benefit: "Essential mineral for human bone health, muscle function, and energy production (ATP)." },
             { number: 13, symbol: "Al", name: "Aluminum", mass: "26.982", category: "post-transition-metal", block: "p", row: 3, col: 13, use_case: "Beverage cans, foil, window frames; high-voltage power lines; aircraft structures.", danger: "Aluminum dust is flammable/explosive. Fine particles can cause respiratory issues.", tandem: "Copper (Cu), Magnesium (Mg), and Zinc (Zn) - used to make strong, low-density structural alloys.", benefit: "Excellent corrosion resistance, high strength-to-weight ratio, and high electrical conductivity." },
             { number: 14, symbol: "Si", name: "Silicon", mass: "28.085", category: "metalloid", block: "p", row: 3, col: 14, use_case: "Semiconductors (chips, transistors); glass and concrete; silicone rubber and sealants.", danger: "Inhaled crystalline silica dust causes silicosis (a debilitating lung disease).", tandem: "Oxygen (O) - forms Silicon Dioxide (SiO₂), the primary component of sand and glass.", benefit: "The backbone of modern electronics and computing due to its semiconducting properties." },
             { number: 15, symbol: "P", name: "Phosphorus", mass: "30.974", category: "nonmetal", block: "p", row: 3, col: 15, use_case: "Fertilizers (phosphates); safety matches; detergents; soft drinks.", danger: "White phosphorus is highly toxic, causes severe burns, and spontaneously ignites in air.", tandem: "Calcium (Ca) - forms Calcium Phosphate, the primary mineral component of bones and teeth.", benefit: "Crucial element in DNA, RNA, and ATP (the main energy molecule in cells)." },
@@ -400,7 +480,7 @@
             { number: 115, symbol: "Mc", name: "Moscovium", mass: "(290)", category: "unknown", block: "p", row: 7, col: 15, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Bismuth (Bi) - predicted to be similar to Bismuth in Group 15.", benefit: "Synthesized through the fusion of Calcium-48 ions with Americium-243 targets." },
             { number: 116, symbol: "Lv", name: "Livermorium", mass: "(293)", category: "unknown", block: "p", row: 7, col: 16, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Polonium (Po) - predicted to be similar to Polonium in Group 16.", benefit: "Named after Lawrence Livermore National Laboratory." },
             { number: 117, symbol: "Ts", name: "Tennessine", mass: "(294)", category: "unknown", block: "p", row: 7, col: 17, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Iodine (I) - the heaviest known halogen.", benefit: "Its successful synthesis confirmed models about nuclear structure." },
-            { number: 118, symbol: "Og", name: "Oganesson", mass: "(294)", category: "unknown", block: "p", row: 7, col: 18, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Xenon (Xe) and Radon (Rn) - the heaviest known noble gas.", benefit: "Named after Yuri Oganessian; the only element in Group 18 that may not behave as a true noble gas." },
+            { number: 118, symbol: "Og", name: "Oganesson", mass: "(294)", category: "noble-gas", block: "p", row: 7, col: 18, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Xenon (Xe) and Radon (Rn) - the heaviest known noble gas.", benefit: "Named after Yuri Oganessian; the only element in Group 18 that may not behave as a true noble gas." },
             
             { number: 58, symbol: "Ce", name: "Cerium", mass: "140.12", category: "lanthanide", block: "f", row: 9, col: 4, use_case: "Catalytic converters (oxidation catalyst); self-cleaning ovens; glass polishing agent.", danger: "Low toxicity, but metal powder is pyrophoric (ignites spontaneously in air).", tandem: "Zirconium (Zr) - Cerium-Zirconium oxides are used as thermal stabilizers in catalysts.", benefit: "The most abundant rare-earth element; crucial for reducing carbon monoxide emissions in vehicles." },
             { number: 59, symbol: "Pr", name: "Praseodymium", mass: "140.91", category: "lanthanide", block: "f", row: 9, col: 5, use_case: "Didymium glass (welder's goggles, absorbs yellow light); high-strength magnets.", danger: "Low toxicity, but metal dust is flammable.", tandem: "Neodymium (Nd) - alloyed to create powerful magnet materials.", benefit: "Used in optical fibers and to color glass and ceramic yellow-green." },
@@ -433,14 +513,32 @@
             { number: 103, symbol: "Lr", name: "Lawrencium", mass: "(262)", category: "actinide", block: "f", row: 10, col: 17, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Californium (Cf) - synthesized by bombarding Californium with Boron ions.", benefit: "The last element of the actinide series; its chemistry is key to understanding superheavy elements." },
         ];
 
-        const periodicTable = document.getElementById('periodic-table');
+        const periodicTable = document.getElementById('grid-view');
+        const reflowList = document.getElementById('reflow-list');
         const detailsPanel = document.getElementById('details-panel');
         const closeBtn = document.getElementById('close-btn');
 
+        function generateElementHTML(element, isList) {
+            if (isList) {
+                return `
+                    <div class="atomic-number">${element.number}</div>
+                    <div class="symbol">${element.symbol}</div>
+                    <div class="name">${element.name}</div>
+                `;
+            } else {
+                 return `
+                    <div class="atomic-number">${element.number}</div>
+                    <div class="symbol">${element.symbol}</div>
+                    <div class="name">${element.name}</div>
+                `;
+            }
+        }
+
         function generateTable() {
             ELEMENT_DATA.forEach(element => {
-                const elDiv = document.createElement('div');
-                elDiv.classList.add('element', element.category);
+                // Generate Grid Element
+                const gridDiv = document.createElement('div');
+                gridDiv.classList.add('element', element.category);
                 
                 let gridRow = element.row;
                 let gridCol = element.col;
@@ -453,16 +551,17 @@
                     gridCol = element.number - 86;
                 } 
                 
-                elDiv.style.gridArea = `${gridRow} / ${gridCol} / ${gridRow + 1} / ${gridCol + 1}`;
-
-                elDiv.innerHTML = `
-                    <div class="atomic-number">${element.number}</div>
-                    <div class="symbol">${element.symbol}</div>
-                    <div class="name">${element.name}</div>
-                `;
+                gridDiv.style.gridArea = `${gridRow} / ${gridCol} / ${gridRow + 1} / ${gridCol + 1}`;
+                gridDiv.innerHTML = generateElementHTML(element, false);
+                gridDiv.addEventListener('click', () => showDetails(element, gridDiv));
+                periodicTable.appendChild(gridDiv);
                 
-                elDiv.addEventListener('click', () => showDetails(element, elDiv));
-                periodicTable.appendChild(elDiv);
+                // Generate List Element
+                const listDiv = document.createElement('div');
+                listDiv.classList.add('element', element.category);
+                listDiv.innerHTML = generateElementHTML(element, true);
+                listDiv.addEventListener('click', () => showDetails(element, listDiv));
+                reflowList.appendChild(listDiv);
             });
         }
 
@@ -492,6 +591,9 @@
 
         generateTable();
         
+        document.addEventListener('DOMContentLoaded', initializeMobileView);
+        window.addEventListener('resize', initializeMobileView);
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -506,4 +608,3 @@
     </script>
 </body>
 </html>
-

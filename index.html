@@ -2,29 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complementary Gradient PWA Periodic Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dynamic PWA Periodic Table</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6600">
     <style>
 
         body {
             font-family: sans-serif;
-
             background: linear-gradient(135deg, #FFEFD5, #FFF5EE, #FFF); 
             color: #333;
             margin: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                -45deg,
+                rgba(255, 102, 0, 0.1),
+                rgba(255, 102, 0, 0.1) 10px,
+                rgba(52, 152, 219, 0.1) 10px,
+                rgba(52, 152, 219, 0.1) 20px
+            );
+            animation: moveBackground 60s linear infinite;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        @keyframes moveBackground {
+            from { transform: translate(0, 0); }
+            to { transform: translate(-50%, -50%); }
         }
 
         .periodic-table-container {
             max-width: 1400px;
             width: 100%;
+            z-index: 10;
         }
+
 
         .periodic-table {
             display: grid;
@@ -55,7 +85,6 @@
         .element:hover {
             transform: scale(1.1);
             z-index: 10;
-            
             box-shadow: 0 0 20px rgba(255, 102, 0, 0.8); 
             outline: 2px solid #FFEB3B;
         }
@@ -79,32 +108,26 @@
             text-align: center;
             padding-top: 2px;
         }
-        
+
 
         .alkali-metal { background: linear-gradient(135deg, #FF8C00, #FFA500); color: #000; }
         .alkaline-earth-metal { background: linear-gradient(135deg, #FFB900, #FFD700); color: #000; }
-        
         .transition-metal { background: linear-gradient(135deg, #4682B4, #5F9EA0); color: #FFF; }
         .post-transition-metal { background: linear-gradient(135deg, #5DADE2, #85C1E9); color: #FFF; }
         .noble-gas { background: linear-gradient(135deg, #34495E, #5D6D7E); color: #FFF; }
-        
         .metalloid { background: linear-gradient(135deg, #2ECC71, #58D68D); color: #FFF; }
-        
         .nonmetal { background: linear-gradient(135deg, #E74C3C, #F1948A); color: #FFF; }
         .halogen { background: linear-gradient(135deg, #8E44AD, #A569BD); color: #FFF; }
-
-
         .lanthanide { background: linear-gradient(135deg, #FF69B4, #FFC0CB); color: #FFF; }
         .actinide { background: linear-gradient(135deg, #9932CC, #BA55D3); color: #FFF; }
         .unknown { background: linear-gradient(135deg, #A9A9A9, #CCCCCC); color: #333; }
 
-
+ 
         .details-panel {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-
             background: linear-gradient(160deg, #FF6600, #CC5500); 
             border: 3px solid #333;
             color: #FFF;
@@ -121,7 +144,7 @@
         .details-panel h3 {
             margin-top: 15px;
             margin-bottom: 5px;
-            color: #FFEB3B;
+            color: #FFEB3B; 
             border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
             padding-bottom: 2px;
         }
@@ -143,8 +166,65 @@
         }
 
         .element.active {
-            outline: 4px solid #FFEB3B;
+            outline: 4px solid #FFEB3B; 
             transform: scale(1.15);
+        }
+
+        #back-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #3498DB, #2980B9);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: background 0.3s, transform 0.2s;
+            z-index: 100;
+        }
+        
+        #back-button:hover {
+            background: linear-gradient(45deg, #2980B9, #3498DB);
+            transform: translateY(-2px);
+        }
+
+
+
+        @media (orientation: landscape) and (max-height: 700px) {
+            .periodic-table-container {
+
+                width: 180vw; 
+                max-width: none;
+                padding-top: 5vh; 
+            }
+
+            .periodic-table {
+
+                gap: 6px; 
+            }
+
+            .element {
+
+                font-size: 18px; 
+                padding: 5px;
+            }
+
+            .atomic-number {
+                font-size: 0.6em; 
+            }
+
+            .symbol {
+                font-size: 1.5em; 
+            }
+
+            .name {
+                font-size: 0.4em; 
+                padding-top: 5px;
+            }
         }
 
     </style>
@@ -177,17 +257,23 @@
             <h3>Key Benefits</h3>
             <p id="detail-benefit"></p>
         </div>
+        
+        <button id="back-button" onclick="goToGoogle()">↩ Go to Google</button>
 
     </div>
 
     <script>
+
+        function goToGoogle() {
+            window.location.href = 'https://www.cogonnationalhighschool.com';
+        }
         
         const ELEMENT_DATA = [
-            // Period 1
+            // diri ang Period 1
             { number: 1, symbol: "H", name: "Hydrogen", mass: "1.008", category: "nonmetal", block: "s", row: 1, col: 1, use_case: "Rocket fuel; ammonia (fertilizer) production; oil refining.", danger: "Extremely flammable and highly explosive gas when mixed with air (Hindenburg effect).", tandem: "Oxygen (O) - forms water (H₂O) for fuel cells.", benefit: "Clean energy source; essential component of organic life." },
             { number: 2, symbol: "He", name: "Helium", mass: "4.003", category: "noble-gas", block: "p", row: 1, col: 18, use_case: "Cooling superconducting magnets (MRI); deep-sea diving gas mixtures.", danger: "Inhalation displaces oxygen, leading to asphyxiation risk.", tandem: "Niobium-Titanium (NbTi) - necessary to cool the superconducting wires.", benefit: "Lowest boiling point, essential for cryogenics and medical imaging." },
             
-            // Period 2
+            // mao ni ang Period 2
             { number: 3, symbol: "Li", name: "Lithium", mass: "6.94", category: "alkali-metal", block: "s", row: 2, col: 1, use_case: "Rechargeable batteries (phones, cars); ceramics and glass; mood stabilizer.", danger: "Highly reactive metal that violently reacts with water, causing fire.", tandem: "Cobalt (Co) and Oxygen (O) - forms the cathode in Li-ion batteries (LiCoO₂).", benefit: "Highest charge-to-weight ratio, powering portable electronics." },
             { number: 4, symbol: "Be", name: "Beryllium", mass: "9.012", category: "alkaline-earth-metal", block: "s", row: 2, col: 2, use_case: "Aerospace structures; X-ray tube windows; gyroscope components.", danger: "Toxic dust or fumes cause chronic berylliosis (lung disease) if inhaled.", tandem: "Copper (Cu) - forms Beryllium-Copper alloy for non-sparking tools.", benefit: "Extremely light, strong, and stiff, ideal for precision engineering." },
             { number: 5, symbol: "B", name: "Boron", mass: "10.81", category: "metalloid", block: "p", row: 2, col: 13, use_case: "Fiberglass; borosilicate glass (Pyrex); nuclear reactor control rods.", danger: "Highly toxic boron hydrides (boranes) are often flammable.", tandem: "Neodymium (Nd) and Iron (Fe) - forms the world's strongest permanent magnets (Nd₂Fe₁₄B).", benefit: "Excellent neutron absorption capability; essential micronutrient for plant growth." },
@@ -197,7 +283,7 @@
             { number: 9, symbol: "F", name: "Fluorine", mass: "18.998", category: "halogen", block: "p", row: 2, col: 17, use_case: "Toothpaste (sodium fluoride); non-stick coatings (Teflon); uranium processing.", danger: "The most electronegative element; highly toxic and corrosive gas that can cause severe chemical burns.", tandem: "Carbon (C) - forms fluorocarbons, used in refrigerants and non-stick materials.", benefit: "The most reactive element, its compounds enable crucial modern materials like PTFE (Teflon)." },
             { number: 10, symbol: "Ne", name: "Neon", mass: "20.180", category: "noble-gas", block: "p", row: 2, col: 18, use_case: "Bright advertising signs (neon lighting); high-voltage indicators; gas lasers.", danger: "Asphyxiant in high concentrations; poses a flash freezing hazard in liquid form.", tandem: "Argon (Ar) - often used together in low-pressure discharge tubes to achieve different colors.", benefit: "Produces a distinct, bright orange-red glow when electrified, widely used for visual display." },
             
-            // Period 3
+            // Mao ni ang Period 3
             { number: 11, symbol: "Na", name: "Sodium", mass: "22.990", category: "alkali-metal", block: "s", row: 3, col: 1, use_case: "Table salt (NaCl); street lights (sodium vapor lamps); nuclear reactor coolant.", danger: "Extremely reactive metal; reacts violently with water, producing flammable hydrogen gas.", tandem: "Chlorine (Cl) - forms Sodium Chloride (NaCl), essential for nerve and muscle function.", benefit: "Crucial electrolyte for fluid balance and electrical signaling in living organisms." },
             { number: 12, symbol: "Mg", name: "Magnesium", mass: "24.305", category: "alkaline-earth-metal", block: "s", row: 3, col: 2, use_case: "Lightweight alloys (aircraft, car parts); flash photography; antacids.", danger: "Metal powder or ribbon is highly flammable and burns with an intense white light.", tandem: "Aluminum (Al) - forms structural alloys that combine strength and low weight.", benefit: "Essential mineral for human bone health, muscle function, and energy production (ATP)." },
             { number: 13, symbol: "Al", name: "Aluminum", mass: "26.982", category: "post-transition-metal", block: "p", row: 3, col: 13, use_case: "Beverage cans, foil, window frames; high-voltage power lines; aircraft structures.", danger: "Aluminum dust is flammable/explosive. Fine particles can cause respiratory issues.", tandem: "Copper (Cu), Magnesium (Mg), and Zinc (Zn) - used to make strong, low-density structural alloys.", benefit: "Excellent corrosion resistance, high strength-to-weight ratio, and high electrical conductivity." },
@@ -207,7 +293,7 @@
             { number: 17, symbol: "Cl", name: "Chlorine", mass: "35.45", category: "halogen", block: "p", row: 3, col: 17, use_case: "Disinfectant/bleach; purification of public water supplies; PVC plastic production.", danger: "Highly toxic, corrosive gas that severely damages the respiratory system (chemical weapon in WWI).", tandem: "Sodium (Na) - forms Sodium Chloride (NaCl), table salt and electrolyte.", benefit: "One of the most effective disinfectants, making large-scale water purification possible." },
             { number: 18, symbol: "Ar", name: "Argon", mass: "39.948", category: "noble-gas", block: "p", row: 3, col: 18, use_case: "Inert shielding gas in welding (to prevent oxidation); filling incandescent and fluorescent light bulbs.", danger: "Asphyxiant, displaces oxygen; poses a hazard in confined spaces.", tandem: "Tungsten (W) - used to protect the hot tungsten filament in light bulbs from corrosion.", benefit: "Provides a cheap, non-reactive atmosphere for high-temperature industrial processes." },
             
-            // Period 4
+            // Mao ni ang Period 4
             { number: 19, symbol: "K", name: "Potassium", mass: "39.098", category: "alkali-metal", block: "s", row: 4, col: 1, use_case: "Fertilizers (Potash); electrolyte in the human body; photography chemicals.", danger: "Highly reactive with water, producing heat and hydrogen that ignites easily.", tandem: "Sodium (Na) - critical pair for nerve impulse transmission (Na-K pump).", benefit: "Essential electrolyte for balancing fluids, regulating heart rhythm, and nerve function." },
             { number: 20, symbol: "Ca", name: "Calcium", mass: "40.078", category: "alkaline-earth-metal", block: "s", row: 4, col: 2, use_case: "Bones and teeth; cement and mortar; as a deoxidizer in metallurgy.", danger: "Pure metal reacts with water, and dust can be an explosion hazard.", tandem: "Phosphorus (P) - forms Calcium Phosphate, the main structural component of bone.", benefit: "Essential for strong bones, muscle contraction, blood clotting, and intercellular signaling." },
             { number: 21, symbol: "Sc", name: "Scandium", mass: "44.956", category: "transition-metal", block: "d", row: 4, col: 3, use_case: "Alloys for high-performance bicycle frames and aerospace components; high-intensity discharge lamps.", danger: "Considered non-toxic, but fine dust is flammable and inhalation should be avoided.", tandem: "Aluminum (Al) - forms Scandium-Aluminum alloys that are significantly stronger than standard Aluminum alloys.", benefit: "Creates extremely light, strong, and weldable alloys for specialized manufacturing." },
@@ -227,7 +313,7 @@
             { number: 35, symbol: "Br", name: "Bromine", mass: "79.904", category: "halogen", block: "p", row: 4, col: 17, use_case: "Flame retardants; water purification; agricultural fumigants; historical photographic film.", danger: "Highly corrosive liquid and vapor; severe irritant to skin, eyes, and respiratory system.", tandem: "Carbon (C) - forms brominated organic compounds used widely as fire suppressants.", benefit: "Compounds are highly effective as flame retardants in plastics and textiles." },
             { number: 36, symbol: "Kr", name: "Krypton", mass: "83.798", category: "noble-gas", block: "p", row: 4, col: 18, use_case: "High-performance light bulbs (improves efficiency); gas lasers; specialized windows (insulation).", danger: "Asphyxiant, displaces oxygen; poses a hazard in confined spaces.", tandem: "Fluorine (F) - used to create the light-emitting medium in Krypton Fluoride lasers.", benefit: "Used in lighting and windows due to its high density, which reduces heat loss." },
             
-            // Period 5
+            // mao ni ang Period 5
             { number: 37, symbol: "Rb", name: "Rubidium", mass: "85.468", category: "alkali-metal", block: "s", row: 5, col: 1, use_case: "High-precision atomic clocks; specialized glass fibers; possible ion thruster fuel.", danger: "Highly reactive metal that ignites spontaneously in air and reacts violently with water.", tandem: "Cesium (Cs) - used together in atomic clocks for extreme stability and accuracy.", benefit: "Used in optical pumping and magneto-optical traps for quantum computing research." },
             { number: 38, symbol: "Sr", name: "Strontium", mass: "87.62", category: "alkaline-earth-metal", block: "s", row: 5, col: 2, use_case: "Red color in fireworks and flares; high-voltage cathode ray tubes (TVs); pain relief for bone cancer (radioactive isotope).", danger: "Strontium-90 is a radioactive isotope that concentrates in bone, posing a serious cancer risk.", tandem: "Barium (Ba) and Calcium (Ca) - chemically similar, often used as a substitute for Calcium in specific medical applications.", benefit: "Strontium salts create the intense, brilliant red color necessary for signal flares and pyrotechnics." },
             { number: 39, symbol: "Y", name: "Yttrium", mass: "88.906", category: "transition-metal", block: "d", row: 5, col: 3, use_case: "Red phosphors in older CRT displays and LEDs; ceramic superconductors; strong alloys.", danger: "Dust is flammable and ingestion is toxic, though less hazardous than heavy metals.", tandem: "Europium (Eu) - Yttrium-Europium compounds create the crucial red color in television screens.", benefit: "Improves the strength of Aluminum and Magnesium alloys; crucial in advanced laser technology." },
@@ -247,7 +333,7 @@
             { number: 53, symbol: "I", name: "Iodine", mass: "126.90", category: "halogen", block: "p", row: 5, col: 17, use_case: "Antiseptics (tincture of iodine); X-ray contrast media; thyroid hormone production.", danger: "Elemental Iodine is corrosive and vapors are irritating. Excessive intake can cause thyroid problems.", tandem: "Sodium (Na) or Potassium (K) - forms Iodide salts (e.g., in iodized salt).", benefit: "Essential trace element required for the synthesis of thyroid hormones, regulating metabolism." },
             { number: 54, symbol: "Xe", name: "Xenon", mass: "131.29", category: "noble-gas", block: "p", row: 5, col: 18, use_case: "High-intensity discharge lamps (car headlights, cinema projectors); general anesthesia; ion thrusters.", danger: "Asphyxiant; poses a hazard in confined spaces. Used as a powerful, non-flammable anesthetic.", tandem: "Fluorine (F) - forms Xenon Fluoride, one of the few stable noble gas compounds.", benefit: "Provides intense, near-daylight illumination for specialized lighting and propulsion." },
             
-            // Period 6 (Excluding Lanthanides)
+            // mao ni ang Period 6 (Excluding ang Lanthanides)
             { number: 55, symbol: "Cs", name: "Cesium", mass: "132.91", category: "alkali-metal", block: "s", row: 6, col: 1, use_case: "The most accurate atomic clocks (Cesium-133); drilling fluids; photoemissive cells.", danger: "The most reactive metal; reacts explosively with water and is highly toxic.", tandem: "Rubidium (Rb) - used together in advanced vapor cell atomic clocks.", benefit: "Allows for the primary time standard definition (second) based on atomic frequency." },
             { number: 56, symbol: "Ba", name: "Barium", mass: "137.33", category: "alkaline-earth-metal", block: "s", row: 6, col: 2, use_case: "Drilling fluids (Barite); X-ray contrast agent (Barium Sulfate, ingested); green color in fireworks.", danger: "All soluble Barium compounds are highly poisonous, causing muscle paralysis.", tandem: "Sulfur (S) - forms Barium Sulfate, which is opaque to X-rays and non-toxic when insoluble.", benefit: "Crucial for oil and gas drilling; Barium Titanate is used in specialized ceramics and capacitors." },
             { number: 57, symbol: "La", name: "Lanthanum", mass: "138.91", category: "lanthanide", block: "f", row: 6, col: 3, use_case: "Camera lenses (high refractive index); nickel-metal hydride (NiMH) batteries; carbon arc lamps.", danger: "Generally low toxicity, but metal dust is highly flammable and explosive.", tandem: "Nickel (Ni) - Lanthanum Nickel Hydride is the anode material in NiMH batteries.", benefit: "Improves glass quality for precision optics and forms high-capacity rechargeable battery anodes." }, 
@@ -267,7 +353,7 @@
             { number: 85, symbol: "At", name: "Astatine", mass: "(210)", category: "halogen", block: "p", row: 6, col: 17, use_case: "Targeted Alpha Therapy (TAT) in nuclear medicine research (Astatine-211).", danger: "Highly radioactive and intensely toxic. Extremely rare; all isotopes have short half-lives.", tandem: "Iodine (I) - behaves similarly to Iodine in the body, concentrating in the thyroid.", benefit: "Its powerful alpha emission is ideal for highly localized, precision cancer treatment." },
             { number: 86, symbol: "Rn", name: "Radon", mass: "(222)", category: "noble-gas", block: "p", row: 6, col: 18, use_case: "Radiation therapy (historical); monitoring seismic activity (earthquake precursor).", danger: "Naturally occurring radioactive gas; major cause of lung cancer in non-smokers, especially when trapped in basements.", tandem: "Polonium (Po) and Bismuth (Bi) - decays into these dangerous solid radioactive particles.", benefit: "Its presence in groundwater or air can be used to track geological and environmental processes." },
             
-            // Period 7 (Excluding Actinides)
+            // mao ni ang Period 7 (Excluding ang Actinides)
             { number: 87, symbol: "Fr", name: "Francium", mass: "(223)", category: "alkali-metal", block: "s", row: 7, col: 1, use_case: "Nuclear physics research (no practical use due to rarity and short half-life).", danger: "Highly radioactive and extremely reactive metal; reacts violently with water.", tandem: "Cesium (Cs) - chemically similar, its behavior is often predicted based on Cesium's properties.", benefit: "One of the least abundant elements on Earth; aids in studying the limits of the periodic table." },
             { number: 88, symbol: "Ra", name: "Radium", mass: "(226)", category: "alkaline-earth-metal", block: "s", row: 7, col: 2, use_case: "Historical luminous paint (watch dials); medical radiation therapy (historical).", danger: "Intensely radioactive; causes bone cancer and other serious illnesses (Radium Girls poisoning).", tandem: "Barium (Ba) - chemically similar; Barium compounds are used to precipitate and remove Radium.", benefit: "Pioneered the field of nuclear medicine and paved the way for understanding radioactivity." },
             { number: 89, symbol: "Ac", name: "Actinium", mass: "(227)", category: "actinide", block: "f", row: 7, col: 3, use_case: "Radioisotope for medical research (Actinium-225); sometimes used as a neutron source.", danger: "Highly radioactive and toxic; only produced synthetically.", tandem: "Bismuth (Bi) - Actinium-225 decays to Bismuth-213, used for Targeted Alpha Therapy.", benefit: "Actinium-225 shows immense promise for targeted alpha-particle tumor destruction." }, 
@@ -287,7 +373,7 @@
             { number: 117, symbol: "Ts", name: "Tennessine", mass: "(294)", category: "unknown", block: "p", row: 7, col: 17, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Iodine (I) - the heaviest known halogen.", benefit: "Its successful synthesis confirmed models about nuclear structure." },
             { number: 118, symbol: "Og", name: "Oganesson", mass: "(294)", category: "unknown", block: "p", row: 7, col: 18, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Xenon (Xe) and Radon (Rn) - the heaviest known noble gas.", benefit: "Named after Yuri Oganessian; the only element in Group 18 that may not behave as a true noble gas." },
             
-            // Lanthanides (f-block, display rows 9 and 10)
+            // mao ni diri ang Lanthanides (f-block, display rows 9 and 10)
             { number: 58, symbol: "Ce", name: "Cerium", mass: "140.12", category: "lanthanide", block: "f", row: 9, col: 4, use_case: "Catalytic converters (oxidation catalyst); self-cleaning ovens; glass polishing agent.", danger: "Low toxicity, but metal powder is pyrophoric (ignites spontaneously in air).", tandem: "Zirconium (Zr) - Cerium-Zirconium oxides are used as thermal stabilizers in catalysts.", benefit: "The most abundant rare-earth element; crucial for reducing carbon monoxide emissions in vehicles." },
             { number: 59, symbol: "Pr", name: "Praseodymium", mass: "140.91", category: "lanthanide", block: "f", row: 9, col: 5, use_case: "Didymium glass (welder's goggles, absorbs yellow light); high-strength magnets.", danger: "Low toxicity, but metal dust is flammable.", tandem: "Neodymium (Nd) - alloyed to create powerful magnet materials.", benefit: "Used in optical fibers and to color glass and ceramic yellow-green." },
             { number: 60, symbol: "Nd", name: "Neodymium", mass: "144.24", category: "lanthanide", block: "f", row: 9, col: 6, use_case: "Powerful permanent magnets (NdFeB); green laser pointers; coloring glass (violet).", danger: "Low toxicity, but metal dust is flammable.", tandem: "Iron (Fe) and Boron (B) - forms the powerful Nd₂Fe₁₄B magnets.", benefit: "Creates the strongest permanent magnets commercially available, essential for motors and hard drives." },
@@ -303,7 +389,7 @@
             { number: 70, symbol: "Yb", name: "Ytterbium", mass: "173.05", category: "lanthanide", block: "f", row: 9, col: 16, use_case: "High-power fiber lasers; atomic clocks (Yb-171, one of the most accurate); stress gauges.", danger: "Low toxicity, but metal dust is flammable.", tandem: "Aluminum (Al) - forms high-strength alloys used in space technology.", benefit: "Ytterbium fiber lasers are widely used in industrial metal processing and manufacturing." },
             { number: 71, symbol: "Lu", name: "Lutetium", mass: "174.97", category: "lanthanide", block: "f", row: 9, col: 17, use_case: "PET scanners (Lutetium Oxyorthosilicate, LSO); petroleum refining catalysts.", danger: "Low toxicity, but metal dust is flammable.", tandem: "Cerium (Ce) and Silicon (Si) - used in the scintillating crystals of medical scanners.", benefit: "Used in some of the most advanced medical imaging technologies (PET scanning)." },
             
-            // Actinides (f-block, display rows 9 and 10)
+            // diri pud ang Actinides (f-block, display rows 9 and 10)
             { number: 90, symbol: "Th", name: "Thorium", mass: "232.04", category: "actinide", block: "f", row: 10, col: 4, use_case: "Nuclear fuel (Thorium cycle reactors); gas lamp mantles (historical); alloying agent.", danger: "Radioactive; long half-life and causes lung/bone cancer. Dust is pyrophoric.", tandem: "Uranium (U) - Thorium-232 transmutes into fissile Uranium-233 in breeder reactors.", benefit: "Potential long-term alternative nuclear fuel source; four times more abundant than Uranium." },
             { number: 91, symbol: "Pa", name: "Protactinium", mass: "231.04", category: "actinide", block: "f", row: 10, col: 5, use_case: "Scientific research (no commercial use); oceanographic dating (tracks water mass circulation).", danger: "Highly radioactive and intensely toxic; bone-seeking alpha emitter.", tandem: "Uranium (U) - a product of Uranium decay, used to study geological processes.", benefit: "Used to date deep-sea sediments and study geochemical processes." },
             { number: 92, symbol: "U", name: "Uranium", mass: "238.03", category: "actinide", block: "f", row: 10, col: 6, use_case: "Nuclear reactor fuel (U-235); armor-piercing ammunition (depleted uranium); counterweights.", danger: "Radioactive and chemically toxic (damages kidneys). Dust is pyrophoric.", tandem: "Plutonium (Pu) - Uranium is the initial feedstock used to create Plutonium.", benefit: "Primary fuel for nuclear power generation, providing vast amounts of clean, reliable electricity." },
@@ -314,7 +400,7 @@
             { number: 97, symbol: "Bk", name: "Berkelium", mass: "(247)", category: "actinide", block: "f", row: 10, col: 11, use_case: "Research element; target material for the synthesis of heavier elements.", danger: "Highly radioactive and toxic; extremely short supply.", tandem: "Californium (Cf) - produced via neutron irradiation, often alongside Californium.", benefit: "Used to study the chemistry of the heaviest elements." },
             { number: 98, symbol: "Cf", name: "Californium", mass: "(251)", category: "actinide", block: "f", row: 10, col: 12, use_case: "Neutron source for oil well logging; cancer treatment (Californium-252).", danger: "Highly radioactive and toxic; very strong neutron emitter, requiring careful handling.", tandem: "Curium (Cm) - produced by high-flux neutron irradiation of Curium targets.", benefit: "Californium-252 is one of the most intense neutron sources available, used in medical and industrial applications." },
             { number: 99, symbol: "Es", name: "Einsteinium", mass: "(252)", category: "actinide", block: "f", row: 10, col: 13, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Fermium (Fm) - the two elements were co-discovered in the debris of the first hydrogen bomb test.", benefit: "Helps validate theories of nuclear structure and behavior." },
-            { number: 100, symbol: "Fm", mass: "(257)", category: "actinide", block: "f", row: 10, col: 14, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Einsteinium (Es) - named after physicist Enrico Fermi.", benefit: "Its study is limited to specialized national laboratories." },
+            { number: 100, symbol: "Fm", name: "Fermium", mass: "(257)", category: "actinide", block: "f", row: 10, col: 14, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Einsteinium (Es) - named after physicist Enrico Fermi.", benefit: "Its study is limited to specialized national laboratories." },
             { number: 101, symbol: "Md", name: "Mendelevium", mass: "(258)", category: "actinide", block: "f", row: 10, col: 15, use_case: "Research element (no commercial use).", danger: "Highly radioactive and toxic; extremely short half-life.", tandem: "Einsteinium (Es) - synthesized by bombarding Einsteinium with alpha particles.", benefit: "Named after Dmitri Mendeleev, the father of the periodic table." },
             { number: 102, symbol: "No", name: "Nobelium", mass: "(259)", category: "actinide", block: "f", row: 10, col: 16, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Curium (Cm) - synthesized by bombarding Curium with Carbon ions.", benefit: "Used in studies of the transition between the actinide and transactinide series." },
             { number: 103, symbol: "Lr", name: "Lawrencium", mass: "(262)", category: "actinide", block: "f", row: 10, col: 17, use_case: "Research element (no commercial use).", danger: "Synthetic and highly radioactive; extremely short half-life.", tandem: "Californium (Cf) - synthesized by bombarding Californium with Boron ions.", benefit: "The last element of the actinide series; its chemistry is key to understanding superheavy elements." },

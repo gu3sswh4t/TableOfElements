@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COGON NHS Periodic Table</title>
+    <title>Dynamic PWA Periodic Table</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6600">
     <style>
-
         body {
             font-family: sans-serif;
             background: linear-gradient(135deg, #FFEFD5, #FFF5EE, #FFFFFF); 
@@ -53,7 +52,6 @@
             width: 100%;
             z-index: 10;
         }
-
 
         .periodic-table {
             display: grid;
@@ -108,7 +106,6 @@
             padding-top: 2px;
         }
 
-
         .alkali-metal { background: linear-gradient(135deg, #FF8C00, #FFA500); color: #000; }
         .alkaline-earth-metal { background: linear-gradient(135deg, #FFB900, #FFD700); color: #000; }
         .transition-metal { background: linear-gradient(135deg, #4682B4, #5F9EA0); color: #FFF; }
@@ -120,7 +117,6 @@
         .lanthanide { background: linear-gradient(135deg, #FF69B4, #FFC0CB); color: #FFF; }
         .actinide { background: linear-gradient(135deg, #9932CC, #BA55D3); color: #FFF; }
         .unknown { background: linear-gradient(135deg, #A9A9A9, #CCCCCC); color: #333; }
-
 
         .details-panel {
             position: fixed;
@@ -191,9 +187,32 @@
             transform: translateY(-2px);
         }
 
-        @media (orientation: landscape) and (max-height: 800px) {
-            body {
+        
+        @media (max-width: 1200px) {
+            .element {
+                font-size: 8px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+             .periodic-table-container {
+                padding-top: 5vh; 
+            }
+            .element {
+                font-size: 7px;
+                gap: 1px;
+            }
+            .symbol {
+                font-size: 1.5em;
+            }
+            .name {
+                display: none;
+            }
+        }
+        
 
+        @media (orientation: landscape) and (max-height: 600px) {
+            body {
                 padding: 0;
                 margin: 0;
                 overflow: hidden;
@@ -202,20 +221,17 @@
             }
 
             .periodic-table-container {
-
-                width: 100vh; 
+                max-width: none;
+                width: 100vh;
                 height: 100vw;
                 padding: 0;
                 margin: 0;
-
                 transform-origin: top left;
                 transform: scale(calc(100vw / 100vh));
             }
             
             .periodic-table {
-
                 grid-template-columns: repeat(18, calc(100vw / 100vh / 18));
-                grid-template-rows: repeat(7, 1fr) 0.5fr repeat(2, 1fr);
                 gap: 0.5vh; 
                 width: 100vh;
                 height: 100vw;
@@ -238,10 +254,10 @@
             .name {
                 font-size: 0.3em; 
                 padding-top: 2px;
+                display: block; 
             }
             
             #back-button {
-
                 bottom: 5px;
                 right: 5px;
                 padding: 8px 15px;
@@ -279,12 +295,12 @@
             <p id="detail-benefit"></p>
         </div>
         
-        <button id="back-button" onclick="HomeCOGONNHS()">↩ HOME - COGON NHS</button>
+        <button id="back-button" onclick="HOMECOGONNHS()">↩ Go to Google</button>
 
     </div>
 
     <script>
-        function HomeCOGONNHS() {
+        function HOMECOGONNHS() {
             window.location.href = 'https://www.cogonnationalhighschool.com';
         }
         
@@ -302,7 +318,7 @@
             { number: 10, symbol: "Ne", name: "Neon", mass: "20.180", category: "noble-gas", block: "p", row: 2, col: 18, use_case: "Bright advertising signs (neon lighting); high-voltage indicators; gas lasers.", danger: "Asphyxiant in high concentrations; poses a flash freezing hazard in liquid form.", tandem: "Argon (Ar) - often used together in low-pressure discharge tubes to achieve different colors.", benefit: "Produces a distinct, bright orange-red glow when electrified, widely used for visual display." },
             
             { number: 11, symbol: "Na", name: "Sodium", mass: "22.990", category: "alkali-metal", block: "s", row: 3, col: 1, use_case: "Table salt (NaCl); street lights (sodium vapor lamps); nuclear reactor coolant.", danger: "Extremely reactive metal; reacts violently with water, producing flammable hydrogen gas.", tandem: "Chlorine (Cl) - forms Sodium Chloride (NaCl), essential for nerve and muscle function.", benefit: "Crucial electrolyte for fluid balance and electrical signaling in living organisms." },
-            { number: 12, symbol: "Mg", name: "Magnesium", mass: "24.305", category: "alkaline-earth-metal", block: "s", row: 3, col: 2, use_case: "Lightweight alloys (aircraft, car parts); flash photography; antacids.", danger: "Metal powder or ribbon is highly flammable and burns with an intense white light.", tandem: "Aluminum (Al) - forms structural alloys that combine strength and low weight.", benefit: "Essential mineral for human bone health, muscle function, and energy production (ATP)." },
+            { number: 12, symbol: "Mg", name: "Magnesium", mass: "24.305", category: "alkaline-earth-metal", block: "s", row: 3, col: 2, use_case: "Lightweight alloys (aircraft, car parts); flash photography; antacids.", danger: "Metal powder or ribbon is highly flammable and burns with an intense white light.", tandem: "Aluminum (Al) - forms structural alloys that combine strength and low weight.", benefit: "Essential mineral for human bone health, muscle contraction, and energy production (ATP)." },
             { number: 13, symbol: "Al", name: "Aluminum", mass: "26.982", category: "post-transition-metal", block: "p", row: 3, col: 13, use_case: "Beverage cans, foil, window frames; high-voltage power lines; aircraft structures.", danger: "Aluminum dust is flammable/explosive. Fine particles can cause respiratory issues.", tandem: "Copper (Cu), Magnesium (Mg), and Zinc (Zn) - used to make strong, low-density structural alloys.", benefit: "Excellent corrosion resistance, high strength-to-weight ratio, and high electrical conductivity." },
             { number: 14, symbol: "Si", name: "Silicon", mass: "28.085", category: "metalloid", block: "p", row: 3, col: 14, use_case: "Semiconductors (chips, transistors); glass and concrete; silicone rubber and sealants.", danger: "Inhaled crystalline silica dust causes silicosis (a debilitating lung disease).", tandem: "Oxygen (O) - forms Silicon Dioxide (SiO₂), the primary component of sand and glass.", benefit: "The backbone of modern electronics and computing due to its semiconducting properties." },
             { number: 15, symbol: "P", name: "Phosphorus", mass: "30.974", category: "nonmetal", block: "p", row: 3, col: 15, use_case: "Fertilizers (phosphates); safety matches; detergents; soft drinks.", danger: "White phosphorus is highly toxic, causes severe burns, and spontaneously ignites in air.", tandem: "Calcium (Ca) - forms Calcium Phosphate, the primary mineral component of bones and teeth.", benefit: "Crucial element in DNA, RNA, and ATP (the main energy molecule in cells)." },
